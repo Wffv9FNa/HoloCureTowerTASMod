@@ -1,5 +1,5 @@
-# Holocure Sandbox Mod
-A Holocure mod that adds sandbox tools to make it easier to track dps and create builds.
+# Holocure Tower TAS Mod
+A Holocure mod that adds TAS to Tower of Suffering.
 ## Installation Steps
 - Download `HoloCureTowerTASMod.dll` and `CallbackManagerMod.dll` from the latest version of the mod https://github.com/PippleCultist/HoloCureTowerTASMod/releases
 - Download `AurieManager.exe` from the latest version of Aurie https://github.com/AurieFramework/Aurie/releases
