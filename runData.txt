@@ -1,0 +1,503 @@
+2 pressCharge
+23 releaseCharge
+0 pressRight
+24 releaseRight
+
+65 jumpRight 19
+
+124 jumpLeft 23
+
+170 pressRight
+200 releaseRight
+
+201 jumpLeft 28
+
+269 jumpLeft 17
+
+309 jumpLeft 25
+
+369 jumpRight 17
+
+409 jumpRight 15
+
+449 jumpLeft 17
+
+494 jumpLeft 20
+
+542 jumpRight 22
+
+594 jumpRight 20
+
+649 jumpRight 30
+
+710 pressRight
+724 releaseRight
+
+725 jumpLeft 17
+
+773 jumpLeft 20
+
+829 jumpLeft 18
+
+874 jumpRight 30
+
+944 jumpRight 20
+
+994 jumpLeft 30
+
+1070 jumpRight 24
+
+1130 jumpLeft 18
+
+1180 jumpLeft 30
+
+1250 jumpLeft 20
+
+1300 jumpRight 21
+
+1360 jumpLeft 21
+
+1415 jumpRight 25
+
+1460 pressRight
+1490 releaseRight
+
+1491 jumpRight 7
+
+1520 jumpLeft 20
+
+1575 jumpLeft 20
+
+1625 jumpLeft 17
+
+1670 jumpLeft 30
+
+1730 pressRight
+1760 releaseRight
+
+1761 jumpLeft 23
+
+1810 pressRight
+1820 releaseRight
+
+1821 jumpRight 30
+
+1875 pressLeft
+1888 releaseLeft
+
+1889 jumpLeft 20
+
+1945 jumpRight 13
+
+1985 jumpRight 33
+
+2050 jumpLeft 20
+
+2100 jumpRight 20
+
+2155 jumpLeft 21
+
+2210 jumpRight 20
+
+2260 pressRight
+2270 releaseRight
+
+2271 jumpLeft 30
+
+2330 jumpRight 23
+
+2385 jumpRight 30
+
+2450 jumpRight 12
+
+2500 jumpRight 30
+
+2570 jumpLeft 30
+
+2630 jumpRight 10
+
+2660 pressRight
+2700 releaseRight
+
+2701 jumpRight 17
+
+2760 jumpLeft 30
+
+2840 jumpLeft 30
+
+2900 pressLeft
+2920 releaseLeft
+
+2921 jumpRight 30
+
+2990 jumpLeft 20
+
+3050 pressLeft
+3064 releaseLeft
+
+3065 jumpLeft 25
+
+3130 jumpRight 20
+
+3180 pressRight
+3200 releaseRight
+
+3201 jumpRight 12
+
+3230 pressRight
+3245 releaseRight
+
+3246 jumpRight 5
+
+3275 jumpRight 30
+
+3350 jumpLeft 20
+
+3400 jumpLeft 27
+
+3450 pressLeft
+3475 releaseLeft
+
+3490 pressRight
+3500 releaseRight
+
+3501 jumpLeft 5
+
+3525 jumpLeft 15
+
+3570 jumpRight 23
+
+3627 jumpRight 20
+
+3670 jumpRight 5
+
+3690 jumpRight 5
+
+3710 pressRight
+3740 releaseRight
+
+3741 jumpLeft 25
+
+3805 jumpLeft 22
+
+3865 jumpRight 30
+
+3930 pressLeft
+3950 releaseLeft
+
+3951 jumpRight 30
+
+4015 jumpLeft 10
+
+4050 jumpLeft 30
+
+4115 pressLeft
+4130 releaseLeft
+
+4131 jumpLeft 30
+
+4190 pressRight
+4230 releaseRight
+
+4231 jumpRight 30
+
+4305 jumpLeft 30
+
+4380 jumpRight 26
+
+4445 jumpLeft 30
+
+4500 pressLeft
+4520 releaseLeft
+
+4521 jumpLeft 30
+
+4585 jumpRight 16
+
+4628 jumpLeft 25
+
+4690 jumpRight 20
+
+4740 jumpLeft 30
+
+4800 pressLeft
+4815 releaseLeft
+
+4816 jumpRight 30
+
+4886 jumpLeft 30
+
+4961 jumpRight 30
+
+5015 pressRight
+5060 releaseRight
+
+5061 jumpRight 30
+
+5131 pressLeft
+5137 releaseLeft
+
+5138 jumpLeft 30
+
+5213 jumpRight 27
+
+5275 jumpLeft 25
+
+5340 jumpRight 25
+
+5405 jumpLeft 25
+
+5470 jumpRight 15
+
+5515 pressLeft
+5520 releaseLeft
+
+5521 jumpLeft 26
+
+5590 jumpLeft 30
+
+5650 pressRight
+5670 releaseRight
+
+5671 jumpRight 15
+
+5725 jumpRight 10
+
+5765 jumpLeft 30
+
+5835 pressRight
+5839 releaseRight
+
+5840 jumpLeft 14
+
+5880 jumpLeft 28
+
+5950 jumpRight 18
+
+5995 pressRight
+6040 releaseRight
+
+6041 jumpRight 13
+
+6085 jumpLeft 21
+
+6140 jumpRight 20
+
+6195 jumpLeft 30
+
+6270 jumpLeft 20
+
+6320 jumpRight 25
+
+6380 jumpLeft 25
+
+6440 jumpLeft 30
+
+6522 jumpRight 20
+
+6572 jumpLeft 30
+
+6637 jumpRight 23
+
+6700 jumpRight 28
+
+6765 jumpRight 15
+
+6810 jumpRight 12
+
+6865 pressLeft
+6880 releaseLeft
+
+6881 jumpRight 1
+
+6920 jumpRight 15
+
+6965 jumpLeft 18
+
+7010 jumpRight 20
+
+7060 jumpLeft 26
+
+7115 pressLeft
+7135 releaseLeft
+
+7136 jumpRight 30
+
+7200 jumpLeft 22
+
+7260 jumpRight 20
+
+7322 jumpLeft 26
+
+7376 pressRight
+7379 releaseRight
+
+7379 jumpLeft 12
+
+7413 pressLeft
+7415 releaseLeft
+
+7415 jumpRight 22
+
+7464 pressLeft
+7469 releaseLeft
+
+7470 jumpLeft 30
+
+7543 jumpLeft 30
+
+7608 jumpRight 29
+
+7678 jumpLeft 22
+
+7727 pressLeft
+7740 releaseLeft
+
+7740 jumpRight 12
+
+7774 jumpLeft 22
+
+7823 jumpRight 20
+
+7877 pressLeft
+7892 releaseLeft
+
+7893 jumpLeft 30
+
+7958 jumpLeft 30
+
+8031 jumpLeft 25
+
+8096 jumpRight 30
+
+8155 jumpRight 6
+
+8185 jumpRight 20
+
+8236 pressLeft
+8255 releaseLeft
+
+8256 jumpLeft 1
+
+8273 jumpLeft 23
+
+8330 jumpRight 20
+
+8381 jumpLeft 23
+
+8438 jumpLeft 26
+
+8494 jumpRight 30
+
+8563 pressRight
+8583 releaseRight
+
+8584 jumpRight 30
+
+8653 jumpLeft 12
+
+8697 jumpRight 28
+
+8768 jumpLeft 25
+
+8831 jumpRight 20
+
+8882 jumpLeft 15
+
+8925 jumpLeft 30
+
+8994 pressLeft
+9004 releaseLeft
+
+9004 jumpRight 22
+
+9053 jumpRight 10
+
+9086 pressLeft
+9091 releaseLeft
+
+9091 jumpRight 16
+
+9134 pressRight
+9141 releaseRight
+
+9142 jumpRight 26
+
+9205 jumpRight 20
+
+9252 pressRight
+9257 releaseRight
+
+9258 jumpRight 18
+
+9303 pressRight
+9314 releaseRight
+
+9314 jumpLeft 30
+
+9373 jumpRight 30
+
+9438 jumpRight 30
+
+9507 pressLeft
+9522 releaseLeft
+
+9523 jumpRight 28
+
+9590 pressRight
+9602 releaseRight
+
+9603 jumpRight 30
+
+9674 jumpLeft 30
+
+9749 jumpRight 20
+
+9805 jumpLeft 23
+
+9858 pressRight
+9875 releaseRight
+
+9876 jumpRight 23
+
+9933 pressRight
+9938 releaseRight
+
+9939 jumpRight 30
+
+10010 pressLeft
+10015 releaseLeft
+
+10015 jumpRight 20
+
+10062 jumpLeft 15
+
+10101 pressLeft
+10104 releaseLeft
+
+10104 jumpRight 23
+
+10157 pressRight
+10159 releaseRight
+
+10159 jumpLeft 23
+
+10221 jumpRight 25
+
+10286 pressRight
+10288 releaseRight
+
+10288 jumpLeft 25
+
+10353 jumpRight 25
+
+10418 pressLeft
+10423 releaseLeft
+
+10423 jumpRight 1
+
+10445 jumpRight 25
+
+10501 jumpLeft 30
+
+10566 jumpLeft 17
