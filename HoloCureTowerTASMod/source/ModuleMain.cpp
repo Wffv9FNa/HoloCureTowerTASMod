@@ -19,6 +19,7 @@ YYTKInterface* g_ModuleInterface = nullptr;
 YYRunnerInterface g_RunnerInterface;
 
 PFUNC_YYGMLScript origConfirmedHoloHouseManagerCreateScript = nullptr;
+PFUNC_YYGMLScript origSetCheckpointHoloHouseManagerCreateScript = nullptr;
 
 CInstance* globalInstance = nullptr;
 
@@ -78,12 +79,17 @@ EXPORTED AurieStatus ModuleInitialize(
 		g_ModuleInterface->Print(CM_RED, "Failed to register callback for %s", "gml_Object_obj_InputManager_Step_0");
 		return AURIE_MODULE_DEPENDENCY_NOT_RESOLVED;
 	}
-	if (!AurieSuccess(callbackManagerInterfacePtr->RegisterCodeEventCallback(MODNAME, "gml_Object_obj_HoloHouseManager_Step_0", nullptr, HoloHouseManagerStepAfter)))
+	if (!AurieSuccess(callbackManagerInterfacePtr->RegisterCodeEventCallback(MODNAME, "gml_Object_obj_HoloHouseManager_Step_0", HoloHouseManagerStepBefore, HoloHouseManagerStepAfter)))
 	{
 		g_ModuleInterface->Print(CM_RED, "Failed to register callback for %s", "gml_Object_obj_HoloHouseManager_Step_0");
 		return AURIE_MODULE_DEPENDENCY_NOT_RESOLVED;
 	}
 
+	if (!AurieSuccess(callbackManagerInterfacePtr->RegisterScriptFunctionCallback(MODNAME, "gml_Script_SetCheckPoint@gml_Object_obj_HoloHouseManager_Create_0", nullptr, nullptr, &origSetCheckpointHoloHouseManagerCreateScript)))
+	{
+		g_ModuleInterface->Print(CM_RED, "Failed to register callback for %s", "gml_Script_SetCheckPoint@gml_Object_obj_HoloHouseManager_Create_0");
+		return AURIE_MODULE_DEPENDENCY_NOT_RESOLVED;
+	}
 	if (!AurieSuccess(callbackManagerInterfacePtr->RegisterScriptFunctionCallback(MODNAME, "gml_Script_Confirmed@gml_Object_obj_HoloHouseManager_Create_0", ConfirmedHoloHouseManagerCreateBefore, nullptr, &origConfirmedHoloHouseManagerCreateScript)))
 	{
 		g_ModuleInterface->Print(CM_RED, "Failed to register callback for %s", "gml_Script_Confirmed@gml_Object_obj_HoloHouseManager_Create_0");

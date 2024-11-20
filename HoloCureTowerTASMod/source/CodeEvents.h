@@ -11,8 +11,12 @@ struct TASCommand
 	bool TASCommandTypeReleaseLeft;
 	bool TASCommandTypePressRight;
 	bool TASCommandTypeReleaseRight;
+	bool TASCommandTypeSetCheckpoint;
+	bool TASCommandTypeLoadCheckpoint;
 
-	TASCommand() : TASCommandTypePressCharge(false), TASCommandTypeReleaseCharge(false), TASCommandTypePressLeft(false), TASCommandTypeReleaseLeft(false), TASCommandTypePressRight(false), TASCommandTypeReleaseRight(false)
+	TASCommand() : TASCommandTypePressCharge(false), TASCommandTypeReleaseCharge(false), TASCommandTypePressLeft(false),
+		TASCommandTypeReleaseLeft(false), TASCommandTypePressRight(false), TASCommandTypeReleaseRight(false), TASCommandTypeSetCheckpoint(false),
+		TASCommandTypeLoadCheckpoint(false)
 	{
 	}
 };
@@ -20,4 +24,5 @@ struct TASCommand
 void PlayerPlatformerCreateAfter(std::tuple<CInstance*, CInstance*, CCode*, int, RValue*>& Args);
 void InputManagerStepBefore(std::tuple<CInstance*, CInstance*, CCode*, int, RValue*>& Args);
 void InputManagerStepAfter(std::tuple<CInstance*, CInstance*, CCode*, int, RValue*>& Args);
+void HoloHouseManagerStepBefore(std::tuple<CInstance*, CInstance*, CCode*, int, RValue*>& Args);
 void HoloHouseManagerStepAfter(std::tuple<CInstance*, CInstance*, CCode*, int, RValue*>& Args);

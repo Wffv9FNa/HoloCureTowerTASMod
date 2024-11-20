@@ -8,6 +8,7 @@ extern int objHoloHouseManagerIndex;
 extern CallbackManagerInterface* callbackManagerInterfacePtr;
 extern YYTKInterface* g_ModuleInterface;
 extern PFUNC_YYGMLScript origConfirmedHoloHouseManagerCreateScript;
+extern PFUNC_YYGMLScript origSetCheckpointHoloHouseManagerCreateScript;
 
 bool hasEnteredTower = false;
 bool isRunningTAS = false;
@@ -60,6 +61,26 @@ void InputManagerStepAfter(std::tuple<CInstance*, CInstance*, CCode*, int, RValu
 		{
 			isRunningTAS = false;
 			hasEnteredTower = false;
+		}
+	}
+}
+
+void HoloHouseManagerStepBefore(std::tuple<CInstance*, CInstance*, CCode*, int, RValue*>& Args)
+{
+	if (isRunningTAS)
+	{
+		CInstance* Self = std::get<0>(Args);
+		if (tasCommandMap[curTASFrame].TASCommandTypeSetCheckpoint)
+		{
+			RValue result;
+			origSetCheckpointHoloHouseManagerCreateScript(Self, nullptr, result, 0, nullptr);
+		}
+		if (tasCommandMap[curTASFrame].TASCommandTypeLoadCheckpoint)
+		{
+			RValue playerPlatformer = g_ModuleInterface->CallBuiltin("instance_find", { objPlayerPlatformerIndex, 0 });
+			RValue towerCheckPoint = g_ModuleInterface->CallBuiltin("variable_global_get", { "towerCheckPoint" });
+			setInstanceVariable(playerPlatformer, GML_x, towerCheckPoint[0]);
+			setInstanceVariable(playerPlatformer, GML_y, towerCheckPoint[1]);
 		}
 	}
 }
@@ -146,6 +167,14 @@ void HoloHouseManagerStepAfter(std::tuple<CInstance*, CInstance*, CCode*, int, R
 					tasCommandMap[num + 1].TASCommandTypePressCharge = true;
 					tasCommandMap[num + duration + 1].TASCommandTypeReleaseCharge = true;
 					maxTASFrame = max(maxTASFrame, num + duration + 2);
+				}
+				else if (action.compare("setCheckpoint") == 0)
+				{
+					tasCommandMap[num].TASCommandTypeSetCheckpoint = true;
+				}
+				else if (action.compare("loadCheckpoint") == 0)
+				{
+					tasCommandMap[num].TASCommandTypeLoadCheckpoint = true;
 				}
 				maxTASFrame = max(maxTASFrame, num);
 			}

@@ -3,7 +3,7 @@
 #include <YYToolkit/shared.hpp>
 #include <CallbackManager/CallbackManagerInterface.h>
 
-#define VERSION_NUM "v1.0.0"
+#define VERSION_NUM "v1.0.1"
 #define MODNAME "Holocure Tower TAS Mod " VERSION_NUM
 
 #define SOME_ENUM(DO) \
@@ -21,6 +21,8 @@
 	DO(towerMode) \
 	DO(towerWin) \
 	DO(onGround) \
+	DO(x) \
+	DO(y) \
 
 #define MAKE_ENUM(VAR) GML_ ## VAR,
 enum VariableNames
