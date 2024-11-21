@@ -14,11 +14,13 @@ bool hasEnteredTower = false;
 bool isRunningTAS = false;
 bool isInTower = false;
 bool isOnGround = true;
+bool isRunningOverride = false;
 int hasEnteredTowerCD = -1;
 
 std::unordered_map<int, TASCommand> tasCommandMap;
 int curTASFrame = 0;
 int maxTASFrame = 0;
+int maxOverrideFrame = 0;
 
 void PlayerPlatformerCreateAfter(std::tuple<CInstance*, CInstance*, CCode*, int, RValue*>& Args)
 {
@@ -60,7 +62,14 @@ void InputManagerStepAfter(std::tuple<CInstance*, CInstance*, CCode*, int, RValu
 		if (curTASFrame > maxTASFrame)
 		{
 			isRunningTAS = false;
-			hasEnteredTower = false;
+		}
+	}
+	else if (isRunningOverride)
+	{
+		curTASFrame++;
+		if (curTASFrame > maxOverrideFrame)
+		{
+			isRunningOverride = false;
 		}
 	}
 }
@@ -85,6 +94,83 @@ void HoloHouseManagerStepBefore(std::tuple<CInstance*, CInstance*, CCode*, int, 
 	}
 }
 
+void parseTASCommands(std::unordered_map<int, TASCommand>& commandMap, int& maxFrame, std::string fileName)
+{
+	CreateDirectory(L"TASRun", NULL);
+	std::ifstream inFile;
+	inFile.open(fileName);
+	std::string line;
+	commandMap.clear();
+	while (std::getline(inFile, line))
+	{
+		if (line.empty())
+		{
+			continue;
+		}
+		std::string frameNum;
+		std::string action;
+		std::istringstream stream(line);
+		std::getline(stream, frameNum, ' ');
+		std::getline(stream, action, ' ');
+		int num = atoi(frameNum.c_str());
+		if (action.compare("pressCharge") == 0)
+		{
+			commandMap[num].TASCommandTypePressCharge = true;
+		}
+		else if (action.compare("releaseCharge") == 0)
+		{
+			commandMap[num].TASCommandTypeReleaseCharge = true;
+		}
+		else if (action.compare("pressLeft") == 0)
+		{
+			commandMap[num].TASCommandTypePressLeft = true;
+		}
+		else if (action.compare("releaseLeft") == 0)
+		{
+			commandMap[num].TASCommandTypeReleaseLeft = true;
+		}
+		else if (action.compare("pressRight") == 0)
+		{
+			commandMap[num].TASCommandTypePressRight = true;
+		}
+		else if (action.compare("releaseRight") == 0)
+		{
+			commandMap[num].TASCommandTypeReleaseRight = true;
+		}
+		else if (action.compare("jumpRight") == 0)
+		{
+			std::string jumpDuration;
+			std::getline(stream, jumpDuration, ' ');
+			int duration = atoi(jumpDuration.c_str());
+			commandMap[num].TASCommandTypePressRight = true;
+			commandMap[num + duration + 2].TASCommandTypeReleaseRight = true;
+			commandMap[num + 1].TASCommandTypePressCharge = true;
+			commandMap[num + duration + 1].TASCommandTypeReleaseCharge = true;
+			maxFrame = max(maxFrame, num + duration + 2);
+		}
+		else if (action.compare("jumpLeft") == 0)
+		{
+			std::string jumpDuration;
+			std::getline(stream, jumpDuration, ' ');
+			int duration = atoi(jumpDuration.c_str());
+			commandMap[num].TASCommandTypePressLeft = true;
+			commandMap[num + duration + 2].TASCommandTypeReleaseLeft = true;
+			commandMap[num + 1].TASCommandTypePressCharge = true;
+			commandMap[num + duration + 1].TASCommandTypeReleaseCharge = true;
+			maxFrame = max(maxFrame, num + duration + 2);
+		}
+		else if (action.compare("setCheckpoint") == 0)
+		{
+			commandMap[num].TASCommandTypeSetCheckpoint = true;
+		}
+		else if (action.compare("loadCheckpoint") == 0)
+		{
+			commandMap[num].TASCommandTypeLoadCheckpoint = true;
+		}
+		maxFrame = max(maxFrame, num);
+	}
+}
+
 void HoloHouseManagerStepAfter(std::tuple<CInstance*, CInstance*, CCode*, int, RValue*>& Args)
 {
 	if (hasEnteredTower)
@@ -105,79 +191,9 @@ void HoloHouseManagerStepAfter(std::tuple<CInstance*, CInstance*, CCode*, int, R
 			isInTower = true;
 			isRunningTAS = true;
 			isOnGround = true;
-			CreateDirectory(L"TASRun", NULL);
-			std::ifstream inFile;
-			inFile.open("TASRun/runData.txt");
-			std::string line;
-			tasCommandMap.clear();
-			while (std::getline(inFile, line))
-			{
-				if (line.empty())
-				{
-					continue;
-				}
-				std::string frameNum;
-				std::string action;
-				std::istringstream stream(line);
-				std::getline(stream, frameNum, ' ');
-				std::getline(stream, action, ' ');
-				int num = atoi(frameNum.c_str());
-				if (action.compare("pressCharge") == 0)
-				{
-					tasCommandMap[num].TASCommandTypePressCharge = true;
-				}
-				else if (action.compare("releaseCharge") == 0)
-				{
-					tasCommandMap[num].TASCommandTypeReleaseCharge = true;
-				}
-				else if (action.compare("pressLeft") == 0)
-				{
-					tasCommandMap[num].TASCommandTypePressLeft = true;
-				}
-				else if (action.compare("releaseLeft") == 0)
-				{
-					tasCommandMap[num].TASCommandTypeReleaseLeft = true;
-				}
-				else if (action.compare("pressRight") == 0)
-				{
-					tasCommandMap[num].TASCommandTypePressRight = true;
-				}
-				else if (action.compare("releaseRight") == 0)
-				{
-					tasCommandMap[num].TASCommandTypeReleaseRight = true;
-				}
-				else if (action.compare("jumpRight") == 0)
-				{
-					std::string jumpDuration;
-					std::getline(stream, jumpDuration, ' ');
-					int duration = atoi(jumpDuration.c_str());
-					tasCommandMap[num].TASCommandTypePressRight = true;
-					tasCommandMap[num + duration + 2].TASCommandTypeReleaseRight = true;
-					tasCommandMap[num + 1].TASCommandTypePressCharge = true;
-					tasCommandMap[num + duration + 1].TASCommandTypeReleaseCharge = true;
-					maxTASFrame = max(maxTASFrame, num + duration + 2);
-				}
-				else if (action.compare("jumpLeft") == 0)
-				{
-					std::string jumpDuration;
-					std::getline(stream, jumpDuration, ' ');
-					int duration = atoi(jumpDuration.c_str());
-					tasCommandMap[num].TASCommandTypePressLeft = true;
-					tasCommandMap[num + duration + 2].TASCommandTypeReleaseLeft = true;
-					tasCommandMap[num + 1].TASCommandTypePressCharge = true;
-					tasCommandMap[num + duration + 1].TASCommandTypeReleaseCharge = true;
-					maxTASFrame = max(maxTASFrame, num + duration + 2);
-				}
-				else if (action.compare("setCheckpoint") == 0)
-				{
-					tasCommandMap[num].TASCommandTypeSetCheckpoint = true;
-				}
-				else if (action.compare("loadCheckpoint") == 0)
-				{
-					tasCommandMap[num].TASCommandTypeLoadCheckpoint = true;
-				}
-				maxTASFrame = max(maxTASFrame, num);
-			}
+			isRunningOverride = false;
+			maxOverrideFrame = 0;
+			parseTASCommands(tasCommandMap, maxTASFrame, "TASRun/runData.txt");
 		}
 		else
 		{

@@ -21,6 +21,8 @@ struct TASCommand
 	}
 };
 
+void parseTASCommands(std::unordered_map<int, TASCommand>& commandMap, int& maxFrame, std::string fileName);
+
 void PlayerPlatformerCreateAfter(std::tuple<CInstance*, CInstance*, CCode*, int, RValue*>& Args);
 void InputManagerStepBefore(std::tuple<CInstance*, CInstance*, CCode*, int, RValue*>& Args);
 void InputManagerStepAfter(std::tuple<CInstance*, CInstance*, CCode*, int, RValue*>& Args);

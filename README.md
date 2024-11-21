@@ -17,3 +17,6 @@ Your TAS run will be a file named `runData.txt` that will be put in your game di
 Commands will be in the format `frameNum action` where action can be `pressCharge`, `releaseCharge`, `pressLeft`, `releaseLeft`, `pressRight`, `releaseRight`, `jumpLeft`, `jumpRight`, `setCheckpoint`, and `loadCheckpoint`. `jumpLeft` and `jumpRight` will have a number after them which determine how many frames the jump is charged for.
 
 The console log will print out what frame number your character touches the ground to help optimize your run.
+
+You can also use the override feature to restart your TAS run directly after a checkpoint instead of needing to restart from the beginning. If you have a file named `overrideData.txt` in the `TASRun` folder with valid commands, it will try to execute those commands after you restart.
+There is currently an issue where clicking really quickly will cause it to input a jump after restarting from the checkpoint. Please click slowly or use the enter key when restarting for now until this is fixed.

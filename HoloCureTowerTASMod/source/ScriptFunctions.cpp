@@ -9,19 +9,51 @@ extern CallbackManagerInterface* callbackManagerInterfacePtr;
 extern PFUNC_YYGMLScript origConfirmedHoloHouseManagerCreateScript;
 extern std::unordered_map<int, TASCommand> tasCommandMap;
 extern int curTASFrame;
+extern int maxTASFrame;
+extern int maxOverrideFrame;
+extern int objPlayerPlatformerIndex;
+extern int objHoloHouseManagerIndex;
+extern bool isInTower;
 extern bool isRunningTAS;
+extern bool isRunningOverride;
+
+std::unordered_map<int, TASCommand> overrideCommandMap;
 
 RValue& ConfirmedHoloHouseManagerCreateBefore(CInstance* Self, CInstance* Other, RValue& ReturnValue, int numArgs, RValue** Args)
 {
 	RValue canControl = g_ModuleInterface->CallBuiltin("variable_instance_get", { Self, "canControl" });
-	RValue paused = g_ModuleInterface->CallBuiltin("variable_instance_get", { Self, "paused" });
 	RValue quitConfirm = g_ModuleInterface->CallBuiltin("variable_instance_get", { Self, "quitConfirm" });
 	RValue towerMode = g_ModuleInterface->CallBuiltin("variable_instance_get", { Self, "towerMode" });
 	RValue towerWin = g_ModuleInterface->CallBuiltin("variable_instance_get", { Self, "towerWin" });
 	RValue pauseOption = g_ModuleInterface->CallBuiltin("variable_instance_get", { Self, "pauseOption" });
-	if (static_cast<int>(lround(pauseOption.AsReal())) == 3)
+	int pauseOptionNum = static_cast<int>(lround(pauseOption.AsReal()));
+	if (isInTower)
 	{
-		callbackManagerInterfacePtr->CancelOriginalFunction();
+		if (pauseOptionNum == 1)
+		{
+			if (!isRunningTAS)
+			{
+				// Check for override file and see if it can be loaded
+				maxOverrideFrame = -1;
+				parseTASCommands(overrideCommandMap, maxOverrideFrame, "TASRun/overrideData.txt");
+				if (maxOverrideFrame != -1)
+				{
+					curTASFrame = maxTASFrame + 1;
+					RValue playerPlatformer = g_ModuleInterface->CallBuiltin("instance_find", { objPlayerPlatformerIndex, 0 });
+					RValue towerCheckPoint = g_ModuleInterface->CallBuiltin("variable_global_get", { "towerCheckPoint" });
+					setInstanceVariable(playerPlatformer, GML_x, towerCheckPoint[0]);
+					setInstanceVariable(playerPlatformer, GML_y, towerCheckPoint[1]);
+					setInstanceVariable(playerPlatformer, GML_canControl, true);
+					setInstanceVariable(Self, GML_paused, false);
+					isRunningOverride = true;
+					callbackManagerInterfacePtr->CancelOriginalFunction();
+				}
+			}
+		}
+		else if (pauseOptionNum == 3)
+		{
+			callbackManagerInterfacePtr->CancelOriginalFunction();
+		}
 	}
 	return ReturnValue;
 }
@@ -31,20 +63,31 @@ bool isLeftPressed = false;
 
 RValue& InputCheckBefore(CInstance* Self, CInstance* Other, RValue& ReturnValue, int numArgs, RValue** Args)
 {
-	if (!isRunningTAS)
+	if (!isRunningTAS && !isRunningOverride)
 	{
 		return ReturnValue;
 	}
 
+	std::unordered_map<int, TASCommand>* commandMap = nullptr;
+
+	if (isRunningTAS)
+	{
+		commandMap = &tasCommandMap;
+	}
+	else if (isRunningOverride)
+	{
+		commandMap = &overrideCommandMap;
+	}
+
 	if (Args[0]->AsString().compare("right") == 0)
 	{
-		if (tasCommandMap.find(curTASFrame) != tasCommandMap.end())
+		if (commandMap->find(curTASFrame) != commandMap->end())
 		{
-			if (tasCommandMap[curTASFrame].TASCommandTypePressRight)
+			if ((*commandMap)[curTASFrame].TASCommandTypePressRight)
 			{
 				isRightPressed = true;
 			}
-			else if (tasCommandMap[curTASFrame].TASCommandTypeReleaseRight)
+			else if ((*commandMap)[curTASFrame].TASCommandTypeReleaseRight)
 			{
 				isRightPressed = false;
 			}
@@ -54,13 +97,13 @@ RValue& InputCheckBefore(CInstance* Self, CInstance* Other, RValue& ReturnValue,
 	}
 	else if (Args[0]->AsString().compare("left") == 0)
 	{
-		if (tasCommandMap.find(curTASFrame) != tasCommandMap.end())
+		if (commandMap->find(curTASFrame) != commandMap->end())
 		{
-			if (tasCommandMap[curTASFrame].TASCommandTypePressLeft)
+			if ((*commandMap)[curTASFrame].TASCommandTypePressLeft)
 			{
 				isLeftPressed = true;
 			}
-			else if (tasCommandMap[curTASFrame].TASCommandTypeReleaseLeft)
+			else if ((*commandMap)[curTASFrame].TASCommandTypeReleaseLeft)
 			{
 				isLeftPressed = false;
 			}
@@ -73,24 +116,36 @@ RValue& InputCheckBefore(CInstance* Self, CInstance* Other, RValue& ReturnValue,
 
 RValue& InputCheckPressedBefore(CInstance* Self, CInstance* Other, RValue& ReturnValue, int numArgs, RValue** Args)
 {
-	if (tasCommandMap.find(curTASFrame) == tasCommandMap.end())
+	if (!isRunningTAS && !isRunningOverride)
 	{
 		return ReturnValue;
 	}
+	
+	std::unordered_map<int, TASCommand>* commandMap = nullptr;
+
+	if (isRunningTAS)
+	{
+		commandMap = &tasCommandMap;
+	}
+	else if (isRunningOverride)
+	{
+		commandMap = &overrideCommandMap;
+	}
+
 	bool hasTASCommand = false;
 	if (Args[0]->AsString().compare("actionOne") == 0)
 	{
-		ReturnValue = tasCommandMap[curTASFrame].TASCommandTypePressCharge;
+		ReturnValue = (*commandMap)[curTASFrame].TASCommandTypePressCharge;
 		hasTASCommand = true;
 	}
 	else if (Args[0]->AsString().compare("left") == 0)
 	{
-		ReturnValue = tasCommandMap[curTASFrame].TASCommandTypePressLeft;
+		ReturnValue = (*commandMap)[curTASFrame].TASCommandTypePressLeft;
 		hasTASCommand = true;
 	}
 	else if (Args[0]->AsString().compare("right") == 0)
 	{
-		ReturnValue = tasCommandMap[curTASFrame].TASCommandTypePressRight;
+		ReturnValue = (*commandMap)[curTASFrame].TASCommandTypePressRight;
 		hasTASCommand = true;
 	}
 	if (hasTASCommand)
@@ -102,24 +157,36 @@ RValue& InputCheckPressedBefore(CInstance* Self, CInstance* Other, RValue& Retur
 
 RValue& InputCheckReleasedBefore(CInstance* Self, CInstance* Other, RValue& ReturnValue, int numArgs, RValue** Args)
 {
-	if (tasCommandMap.find(curTASFrame) == tasCommandMap.end())
+	if (!isRunningTAS && !isRunningOverride)
 	{
 		return ReturnValue;
 	}
+
+	std::unordered_map<int, TASCommand>* commandMap = nullptr;
+
+	if (isRunningTAS)
+	{
+		commandMap = &tasCommandMap;
+	}
+	else if (isRunningOverride)
+	{
+		commandMap = &overrideCommandMap;
+	}
+
 	bool hasTASCommand = false;
 	if (Args[0]->AsString().compare("actionOne") == 0)
 	{
-		ReturnValue = tasCommandMap[curTASFrame].TASCommandTypeReleaseCharge;
+		ReturnValue = (*commandMap)[curTASFrame].TASCommandTypeReleaseCharge;
 		hasTASCommand = true;
 	}
 	else if (Args[0]->AsString().compare("left") == 0)
 	{
-		ReturnValue = tasCommandMap[curTASFrame].TASCommandTypeReleaseLeft;
+		ReturnValue = (*commandMap)[curTASFrame].TASCommandTypeReleaseLeft;
 		hasTASCommand = true;
 	}
 	else if (Args[0]->AsString().compare("right") == 0)
 	{
-		ReturnValue = tasCommandMap[curTASFrame].TASCommandTypeReleaseRight;
+		ReturnValue = (*commandMap)[curTASFrame].TASCommandTypeReleaseRight;
 		hasTASCommand = true;
 	}
 	if (hasTASCommand)
