@@ -198,6 +198,5 @@ RValue& InputCheckReleasedBefore(CInstance* Self, CInstance* Other, RValue& Retu
 
 RValue& DoAchievementBefore(CInstance* Self, CInstance* Other, RValue& ReturnValue, int numArgs, RValue** Args)
 {
-	callbackManagerInterfacePtr->CancelOriginalFunction();
 	return ReturnValue;
 }
